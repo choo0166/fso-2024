@@ -1,17 +1,5 @@
 const mongoose = require('mongoose')
 
-// allow fields not specified in schema to be saved
-mongoose.set('strictQuery',false)
-
-const connStr = process.env.MONGODB_URI
-console.log("Connecting to DB...")
-
-mongoose.connect(connStr)
-.then(res => console.log("Connected to MongoDB"))
-.catch(err => {
-  console.log("error connecting to MongoDB: ", err.message)
-})
-
 // define schema for the document to be stored
 const contactSchema = new mongoose.Schema({
   name: {
