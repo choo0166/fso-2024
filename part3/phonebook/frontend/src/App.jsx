@@ -60,7 +60,7 @@ const App = () => {
           })
           .catch((err) =>
             setStatusMessage({
-              message: `Information of ${newName} has already been removed from server`,
+              message: err.response.data.error,
               isError: true,
             })
           )
@@ -86,7 +86,7 @@ const App = () => {
           setPersons((oldPersons) => oldPersons.concat(response.data))
         })
         .catch((err) =>
-          setStatusMessage({ message: JSON.stringify(err), isError: true })
+          setStatusMessage({ message: err.response.data.error, isError: true })
         )
         .finally(() => {
           setTimeout(
