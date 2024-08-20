@@ -5,6 +5,7 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const app = express()
 const blogsRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
 const morgan = require("morgan")
 const middleware = require('./utils/middleware')
 
@@ -31,6 +32,7 @@ app.use(
     ":method :url :status :res[content-length] - :response-time ms :content-body"
   )
 )
+app.use('/api/users', usersRouter)
 app.use('/api/blogs', blogsRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
