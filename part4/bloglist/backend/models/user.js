@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+    minLength: 3,
     unique: true, // ensures field is unique by creating an index for it
   },
   name: {
@@ -24,6 +25,8 @@ const userSchema = new mongoose.Schema({
   ],
 })
 
+/* Sanitize returned fields when toJSON or JSON.stringify 
+method is called on returned object from model */
 userSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
