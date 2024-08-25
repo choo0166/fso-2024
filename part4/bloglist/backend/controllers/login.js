@@ -1,5 +1,6 @@
 const loginRouter = require("express").Router()
 const logger = require("../utils/logger")
+const config = require('../utils/config')
 const User = require("../models/user")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
@@ -22,7 +23,7 @@ loginRouter.post("/", async (request, response, next) => {
       username: user.username,
       id: user._id,
     }
-    const token = await jwt.sign(jwtPayload, process.env.JWT_SECRET, {
+    const token = await jwt.sign(jwtPayload, config.JWT_SECRET, {
       expiresIn: 900,
     })
     response

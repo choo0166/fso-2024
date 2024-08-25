@@ -1,4 +1,5 @@
 const logger = require("./logger")
+const config = require('./config')
 const jwt = require("jsonwebtoken")
 const User = require("../models/user")
 const mongoose = require("mongoose")
@@ -58,7 +59,7 @@ const tokenExtractor = (request, response, next) => {
 const userExtractor = async (request, response, next) => {
   // assume tokenExtractor middleware is taken into use before this is called
   try {
-    const decodedToken = jwt.verify(request.token, process.env.JWT_SECRET)
+    const decodedToken = jwt.verify(request.token, config.JWT_SECRET)
     if (!decodedToken.id) {
       return response.status(401).json({ error: "invalid token" })
     }
