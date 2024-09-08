@@ -1,11 +1,7 @@
 import { useState } from "react"
-import { createAnecdote } from "../reducers/anecdoteReducer"
-import {
-  createNotification,
-  expireNotification,
-} from "../reducers/notificationReducer"
+import { setNotification } from "../reducers/notificationReducer"
 import { useDispatch } from "react-redux"
-import anecdoteService from "../services/anecdotes"
+import { createAnecdote } from "../reducers/anecdoteReducer"
 
 const AnecdoteForm = () => {
   const [input, setInput] = useState("")
@@ -14,14 +10,8 @@ const AnecdoteForm = () => {
   const formSubmitHandler = async (event) => {
     event.preventDefault()
     console.log(event)
-    const newAnecdote = await anecdoteService.createNew(input)
-    dispatch(createAnecdote(newAnecdote))
-    dispatch(
-      createNotification(
-        `you submitted ${input}`,
-        setTimeout(() => dispatch(expireNotification()), 5000)
-      )
-    )
+    dispatch(createAnecdote(input))
+    dispatch(setNotification(`you submitted ${input}`, 5))
     setInput("")
   }
 

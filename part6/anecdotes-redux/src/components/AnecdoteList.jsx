@@ -1,27 +1,14 @@
 import { useSelector, useDispatch } from "react-redux"
-import { voteAnecdote } from "../reducers/anecdoteReducer"
-import {
-  createNotification,
-  expireNotification,
-} from "../reducers/notificationReducer"
-import anecdoteService from "../services/anecdotes"
+import { setNotification } from "../reducers/notificationReducer"
+import { updateAnecdoteVotes } from "../reducers/anecdoteReducer"
 import { useDebouncedSelector } from "../utils/debouncedSelector"
 
 const AnecdoteLine = ({ anecdote }) => {
   const dispatch = useDispatch()
-  const voteHandler = async () => {
-    const response = await anecdoteService.updateVote(anecdote.id, {
-      ...anecdote,
-      votes: anecdote.votes + 1,
-    })
-    console.log(`Updated anecdote: ${JSON.stringify(response)}`)
-    dispatch(voteAnecdote(response.id))
-    dispatch(
-      createNotification(
-        `you voted ${anecdote.content}`,
-        setTimeout(() => dispatch(expireNotification()), 5000)
-      )
-    )
+  const voteHandler = () => {
+    const payload = {...anecdote, votes: anecdote.votes + 1}
+    dispatch(updateAnecdoteVotes(anecdote.id, payload))
+    dispatch(setNotification(`you voted ${anecdote.content}`, 5))
   }
   return (
     <>

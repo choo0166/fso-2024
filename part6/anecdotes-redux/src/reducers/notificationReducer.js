@@ -33,4 +33,12 @@ export const expireNotification = () => {
   }
 }
 
+export const setNotification = (message, expirySeconds) => {
+  // Redux thunk calls function with dispatch method as first argument
+  return (dispatch) => {
+    const timer = setTimeout(() => dispatch(expireNotification()), expirySeconds * 1000)
+    dispatch(createNotification(message, timer))
+  }
+}
+
 export default notificationReducer
