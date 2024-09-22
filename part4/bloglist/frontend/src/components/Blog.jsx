@@ -1,7 +1,30 @@
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>  
-)
+import { useState, useEffect } from "react"
 
-export default Blog
+const BlogLine = ({ blog }) => {
+  return (
+    <>
+    <tr>
+      <td>{blog.title}</td>
+      <td>{blog.author}</td>
+    </tr>
+    </>
+  )
+}
+
+
+const Blogs = ({ blogs }) => {
+
+  return (
+    <div>
+      <table>
+        <tbody>
+          {blogs.map((blog) => {
+            return <BlogLine key={blog.id} blog={blog} />
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+export default Blogs
