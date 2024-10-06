@@ -1,5 +1,4 @@
 import { useState } from "react"
-import blogService from "../services/blogs"
 
 const initialState = {
   title: "",
@@ -7,7 +6,7 @@ const initialState = {
   url: "",
 }
 
-const BlogForm = ({ setNotif, setBlogs }) => {
+const BlogForm = ({ createPostHandler }) => {
   const [blogDetails, setBlogDetails] = useState(initialState)
 
   const handleInputChange = (e) => {
@@ -20,30 +19,8 @@ const BlogForm = ({ setNotif, setBlogs }) => {
   const formSubmitHandler = async (event) => {
     event.preventDefault()
     console.log(event)
-    try {
-      const savedBlog = await blogService.create(blogDetails)
-      console.log("created new blog ", savedBlog)
-      setNotif({
-        message: `a new blog ${savedBlog.title} by ${savedBlog.author} added`,
-        isError: false,
-      })
-      setBlogs((prevBlogs) => ([ ...prevBlogs, savedBlog]))
-    } catch (error) {
-      console.error(error)
-      setNotif({
-        message: `Error: ${error.response.data.error}`,
-        isError: true,
-      })
-    } finally {
-      setTimeout(
-        () =>
-          setNotif((oldNotif) => {
-            return { ...oldNotif, message: null }
-          }),
-        5000
-      )
-      setBlogDetails(initialState)
-    }
+    createPostHandler(blogDetails)
+    setBlogDetails(initialState)
   }
 
   return (
