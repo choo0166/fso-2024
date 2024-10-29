@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const createAxiosClient = ({ config, getAuthToken }) => {
   const client = axios.create(config)
-  /* use axios interceptors to inject auth tokens in request 
+  /* use axios interceptors to inject auth tokens in request
   authorization headers */
   client.interceptors.request.use(
     (config) => {
@@ -14,7 +14,7 @@ export const createAxiosClient = ({ config, getAuthToken }) => {
         }
       }
       return config
-    }, 
+    },
     (error) => {
       return Promise.reject(error)
     }

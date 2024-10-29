@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const initialState = {
-  title: "",
-  author: "",
-  url: "",
+  title: '',
+  author: '',
+  url: '',
 }
 
 const BlogForm = ({ createPostHandler }) => {
@@ -48,7 +48,7 @@ const BlogForm = ({ createPostHandler }) => {
           onChange={handleInputChange}
         ></input>
         <br></br>
-        <button type="Submit">create</button>
+        <button type="Submit">submit</button>
       </form>
     </div>
   )

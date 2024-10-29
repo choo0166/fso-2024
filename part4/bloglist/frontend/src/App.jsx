@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from "react"
-import Blog from "./components/Blog"
-import BlogForm from "./components/BlogForm"
-import LoginForm from "./components/Login"
-import Notification from "./components/Notification"
-import Togglable from "./components/Togglable"
-import { isJwtExpired } from "./utils/verifyJWTExpiry"
-import blogService from "./services/blogs"
+import { useState, useEffect, useRef } from 'react'
+import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import LoginForm from './components/Login'
+import Notification from './components/Notification'
+import UserBar from './components/UserBar'
+import Togglable from './components/Togglable'
+import { isJwtExpired } from './utils/verifyJWTExpiry'
+import blogService from './services/blogs'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -15,7 +16,7 @@ const App = () => {
 
   useEffect(() => {
     // Retrieve auth details from browser's local storage
-    const loggedInUser = window.localStorage.getItem("loggedBlogsAppUser")
+    const loggedInUser = window.localStorage.getItem('loggedBlogsAppUser')
     if (loggedInUser) {
       // parse JSON string from local storage
       const userJSON = JSON.parse(loggedInUser)
@@ -24,34 +25,32 @@ const App = () => {
         setUser(userJSON)
       } else {
         // token expired, remove from local storage
-        console.log("JWT expired!")
-        window.localStorage.removeItem("loggedBlogsAppUser")
+        console.log('JWT expired!')
+        window.localStorage.removeItem('loggedBlogsAppUser')
       }
     }
   }, [])
 
   useEffect(() => {
-    if (user) {
-      blogService
-        .getAll()
-        .then((initialBlogs) => {
-          setBlogs(initialBlogs)
+    blogService
+      .getAll()
+      .then((initialBlogs) => {
+        setBlogs(initialBlogs)
+      })
+      .catch((error) => {
+        console.error(error)
+        setNotif({
+          message: `Error: ${error.response.data.error}`,
+          isError: true,
         })
-        .catch((error) => {
-          console.error(error)
-          setNotif({
-            message: `Error: ${error.response.data.error}`,
-            isError: true,
-          })
-          setTimeout(
-            () =>
-              setNotif((oldNotif) => {
-                return { ...oldNotif, message: null }
-              }),
-            5000
-          )
-        })
-    }
+        setTimeout(
+          () =>
+            setNotif((oldNotif) => {
+              return { ...oldNotif, message: null }
+            }),
+          5000
+        )
+      })
   }, [user])
 
   const logoutHandler = () => {
@@ -63,7 +62,7 @@ const App = () => {
   const createPostHandler = async (newBlogDetails) => {
     try {
       const savedBlog = await blogService.create(newBlogDetails)
-      console.log("created new blog ", savedBlog)
+      console.log('created new blog ', savedBlog)
       // toggle visibility of input form
       blogFormRef.current.toggleVisibility()
       setNotif({
@@ -88,23 +87,87 @@ const App = () => {
     }
   }
 
+  const likeBlogHandler = async (newBlogDetails, user) => {
+    try {
+      const updatedBlog = await blogService.update(newBlogDetails)
+      console.log(`updated blog ${JSON.stringify(updatedBlog)}`)
+      setBlogs(
+        blogs.map((blog) =>
+          blog.id === updatedBlog.id ? { ...updatedBlog, user } : blog
+        )
+      )
+      setNotif({
+        message: `You liked ${updatedBlog.title} by ${updatedBlog.author}`,
+        isError: false,
+      })
+    } catch (error) {
+      console.error(error)
+      setNotif({
+        message: `Error: ${error.response.data.error}`,
+        isError: true,
+      })
+    } finally {
+      setTimeout(
+        () =>
+          setNotif((oldNotif) => {
+            return { ...oldNotif, message: null }
+          }),
+        5000
+      )
+    }
+  }
+
+  const deleteBlogHandler = async (blog) => {
+    try {
+      const blogId = blog.id
+      await blogService.remove(blogId)
+      console.log(`deleted blog ${JSON.stringify(blog)}`)
+      setBlogs(blogs.filter((blog) => blog.id !== blogId))
+      setNotif({
+        message: `You removed ${blog.title} by ${blog.author}`,
+        isError: false,
+      })
+    } catch (error) {
+      console.error(error)
+      setNotif({
+        message: `Error: ${error.response.data.error}`,
+        isError: true,
+      })
+    } finally {
+      setTimeout(
+        () =>
+          setNotif((oldNotif) => {
+            return { ...oldNotif, message: null }
+          }),
+        5000
+      )
+    }
+  }
+
   return (
     <div>
       <Notification messageObj={notif} />
+      <h2>Blogs</h2>
       {user === null ? (
-        <LoginForm setUser={setUser} setNotif={setNotif} />
+        <div>
+          <LoginForm setUser={setUser} setNotif={setNotif} />
+        </div>
       ) : (
         <div>
-          <h2>Blogs</h2>
-          <p>
-            {user.username} logged in{" "}
-            <button type="Submit" onClick={logoutHandler}>
-              Logout
-            </button>
-          </p>
-          <Blog blogs={blogs} />
-          <br></br>
-          <Togglable buttonLabel="new post" ref={blogFormRef}>
+          <UserBar user={user} logoutHandler={logoutHandler} />
+        </div>
+      )}
+      <div>
+        <Blog
+          blogs={blogs}
+          likeBlogHandler={likeBlogHandler}
+          deleteBlogHandler={deleteBlogHandler}
+          user={user?.username}
+        />
+      </div>
+      {user && (
+        <div>
+          <Togglable buttonLabel="create new post" ref={blogFormRef}>
             <BlogForm createPostHandler={createPostHandler} />
           </Togglable>
         </div>

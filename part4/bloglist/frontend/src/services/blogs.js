@@ -1,4 +1,4 @@
-import { createAxiosClient } from "../utils/createAxiosClient"
+import { createAxiosClient } from '../utils/createAxiosClient'
 
 const axiosClient = createAxiosClient({
   config: {
@@ -6,7 +6,7 @@ const axiosClient = createAxiosClient({
     useAuthorization: true  // maybe specified in request handlers
   },
   getAuthToken: () => {
-    const user = window.localStorage.getItem("loggedBlogsAppUser")
+    const user = window.localStorage.getItem('loggedBlogsAppUser')
     if (user) {
       const userJSON = JSON.parse(user)
       return userJSON.token
@@ -16,14 +16,24 @@ const axiosClient = createAxiosClient({
 })
 
 const getAll = async () => {
-  const response = await axiosClient.get("/")
+  const response = await axiosClient.get('/')
   return response.data
 }
 
 const create = async (payload) => {
   const newBlog = { ...payload, likes: 0 }
-  const response = await axiosClient.post("/", newBlog)
+  const response = await axiosClient.post('/', newBlog)
   return response.data
 }
 
-export default { getAll, create }
+const update = async (newBlog) => {
+  const response = await axiosClient.put(`/${newBlog.id}`, newBlog)
+  return response.data
+}
+
+const remove = async (id) => {
+  const response = await axiosClient.delete(`/${id}`)
+  return response.data
+}
+
+export default { getAll, create, update, remove }

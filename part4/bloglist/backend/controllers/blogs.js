@@ -2,7 +2,7 @@ const blogsRouter = require("express").Router()
 const logger = require("../utils/logger")
 const User = require("../models/user")
 const Blog = require("../models/blog")
-const { initMongoSession } = require("../utils/middleware")
+const { userExtractor, initMongoSession } = require("../utils/middleware")
 
 blogsRouter.get("/", async (request, response, next) => {
   try {
@@ -13,7 +13,7 @@ blogsRouter.get("/", async (request, response, next) => {
   }
 })
 
-blogsRouter.post("/", initMongoSession, async (request, response, next) => {
+blogsRouter.post("/", userExtractor, initMongoSession, async (request, response, next) => {
   const { token, user, mongoSession } = request
   logger.info(user)
 
@@ -57,6 +57,7 @@ blogsRouter.post("/", initMongoSession, async (request, response, next) => {
 
 blogsRouter.delete(
   "/:id",
+  userExtractor,
   initMongoSession,
   async (request, response, next) => {
     const blogId = request.params.id
@@ -105,7 +106,7 @@ blogsRouter.delete(
   }
 )
 
-blogsRouter.put("/:id", async (request, response, next) => {
+blogsRouter.put("/:id", userExtractor, async (request, response, next) => {
   const blogId = request.params.id
   const { token, user, body } = request
 
