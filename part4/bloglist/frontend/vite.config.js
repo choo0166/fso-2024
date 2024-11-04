@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+/* https://vitejs.dev/config/
+See also https://vitest.dev/config for vitest config
+*/
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -12,4 +14,9 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './testSetup.js'
+  }
 })

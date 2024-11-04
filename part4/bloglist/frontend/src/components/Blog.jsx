@@ -1,6 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo } from "react"
 
-const BlogLine = ({ blog, likeBlogHandler, deleteBlogHandler, loggedInUser }) => {
+const BlogLine = ({
+  blog,
+  likeBlogHandler,
+  deleteBlogHandler,
+  loggedInUser,
+}) => {
   const [showDetail, setShowDetail] = useState(false)
 
   const toggleView = () => {
@@ -19,35 +24,39 @@ const BlogLine = ({ blog, likeBlogHandler, deleteBlogHandler, loggedInUser }) =>
     }
   }
 
-  const buttonLabel = showDetail ? 'hide' : 'view'
+  const buttonLabel = showDetail ? "hide" : "view"
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: 'solid',
+    border: "solid",
     borderWidth: 1,
     marginBottom: 5,
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blogDetails">
       <div>
-        {blog.title} by {blog.author}{' '}
+        {blog.title} by {blog.author}{" "}
         <button onClick={toggleView}>{buttonLabel}</button>
-        {showDetail && (
-          <div>
+        <div
+          style={{ display: showDetail ? "" : "none" }}
+          className="togglableDetails"
+        >
+          <span>
             <a href={blog.url}>{blog.url}</a>
             <br />
-            likes: {blog.likes} <button onClick={likeBlog}>like</button>
+            <span>
+              likes: {blog.likes} <button onClick={likeBlog}>like</button>
+            </span>
             <br />
             {blog.user.username}
-            <div>
-              {blog.user.username === loggedInUser && (
-                <button onClick={deleteBlog}>remove</button>
-              )}
-            </div>
-          </div>
-        )}
+            <br />
+            {blog.user.username === loggedInUser && (
+              <button onClick={deleteBlog}>remove</button>
+            )}
+          </span>
+        </div>
       </div>
     </div>
   )
@@ -59,7 +68,7 @@ const Blogs = ({ blogs, likeBlogHandler, deleteBlogHandler, user }) => {
   }, [blogs])
 
   return (
-    <div>
+    <div className="blogList">
       {sortedBlogs.map((blog) => {
         return (
           <BlogLine
