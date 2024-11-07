@@ -13,6 +13,7 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    port: 3000
   },
   test: {
     environment: 'jsdom',
