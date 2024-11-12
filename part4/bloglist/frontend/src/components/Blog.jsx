@@ -15,7 +15,7 @@ const BlogLine = ({
   const likeBlog = () => {
     const { user, ...payload } = blog
     payload.likes = payload.likes + 1
-    likeBlogHandler(payload, user)
+    likeBlogHandler(payload)
   }
 
   const deleteBlog = () => {
@@ -64,7 +64,7 @@ const BlogLine = ({
 
 const Blogs = ({ blogs, likeBlogHandler, deleteBlogHandler, user }) => {
   const sortedBlogs = useMemo(() => {
-    return blogs.toSorted((b1, b2) => b1.likes - b2.likes)
+    return blogs.toSorted((b1, b2) => b2.likes - b1.likes)
   }, [blogs])
 
   return (

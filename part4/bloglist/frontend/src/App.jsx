@@ -69,7 +69,7 @@ const App = () => {
         message: `a new blog ${savedBlog.title} by ${savedBlog.author} added`,
         isError: false,
       })
-      setBlogs((prevBlogs) => [...prevBlogs, savedBlog])
+      setBlogs((prevBlogs) => [...prevBlogs, { ...savedBlog, user }])
     } catch (error) {
       console.error(error)
       setNotif({
@@ -87,7 +87,7 @@ const App = () => {
     }
   }
 
-  const likeBlogHandler = async (newBlogDetails, user) => {
+  const likeBlogHandler = async (newBlogDetails) => {
     try {
       const updatedBlog = await blogService.update(newBlogDetails)
       console.log(`updated blog ${JSON.stringify(updatedBlog)}`)

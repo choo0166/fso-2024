@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState } from "react"
 
 const initialState = {
-  title: '',
-  author: '',
-  url: '',
+  title: "",
+  author: "",
+  url: "",
 }
 
 const BlogForm = ({ createPostHandler }) => {
@@ -29,6 +29,7 @@ const BlogForm = ({ createPostHandler }) => {
       <form onSubmit={formSubmitHandler}>
         title
         <input
+          data-testid="newBlogTitle"
           name="title"
           value={blogDetails.title}
           onChange={handleInputChange}
@@ -36,6 +37,7 @@ const BlogForm = ({ createPostHandler }) => {
         <br></br>
         author
         <input
+          data-testid="newBlogAuthor"
           name="author"
           value={blogDetails.author}
           onChange={handleInputChange}
@@ -43,6 +45,7 @@ const BlogForm = ({ createPostHandler }) => {
         <br></br>
         url
         <input
+          data-testid="newBlogUrl"
           name="url"
           value={blogDetails.url}
           onChange={handleInputChange}
